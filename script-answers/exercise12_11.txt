@@ -1,0 +1,13 @@
+#!/bin/bash 
+docker compose -f ..//todo-app/todo-backend/docker-compose.dev_redis.yml up -d
+
+docker exec -i rrr redis-cli <<EOF
+# SET added 9001
+GET added
+# DEL added
+EOF
+
+cd ..//todo-app/todo-backend
+
+REDIS_URL=redis://localhost:6379  MONGO_URL=mongodb://the_username:the_password@localhost:3456/the_database npm run dev
+

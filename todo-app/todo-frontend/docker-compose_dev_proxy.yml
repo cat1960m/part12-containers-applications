@@ -1,0 +1,26 @@
+services:
+  dev: # The name of the service, can be anything
+    image: image_todo-front_dev # Declares which image to use
+    build:
+      context: .
+      dockerfile: Dockerfile_dev
+    ports: # Declares the ports to publish
+      - 5173:5173
+    volumes:
+      - ./:/usr/src/app # The path can be relative, so ./ is enough to say "the same location as the docker-compose.yml"
+    container_name: container_todo-front_dev
+  nginx:
+    image: nginx:1.20.1
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:80
+    container_name: reverse-proxy
+    depends_on:
+      - dev # wait for the frontend container to be started
+
+# docker compose  -f docker-compose_dev_proxy.yml up
+# docker compose -f docker-compose_dev_proxy.yml up -d (-d for detached)
+# docker compose -f docker-compose_dev_proxy.yml down (if started with -d)
+# docker compose  -f docker-compose_dev_proxy.yml up --build. # renew image
+

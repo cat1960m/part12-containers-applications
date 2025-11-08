@@ -1,0 +1,15 @@
+#!/bin/bash 
+# docker compose -f ../todo-app/todo-backend/docker-compose.dev.yml down --volumes
+docker compose -f ../todo-app/todo-backend/docker-compose.dev.yml up -d
+
+docker container ls
+
+sleep 5
+
+docker exec -i mmm mongosh "mongodb://root:example@localhost:27017/the_database?authSource=admin" <<EOF
+show dbs
+use the_database
+db.todos.insertOne({text: '999', done: true})
+db.todos.find({})
+EOF
+

@@ -1,0 +1,12 @@
+services:
+  nginx: # The name of the service, can be anything
+    image: image_todo-front_nginx # Declares which image to use
+    build:
+      context: .
+      dockerfile: Dockerfile_nginx
+    ports: # Declares the ports to publish
+      - 8000:80
+    container_name: container_todo-front_nginx
+# docker compose  -f docker-compose_nginx.yml up
+# docker compose -f docker-compose_nginx.yml up -d (-d for detached)
+# docker compose -f docker-compose_nginx.yml down (if started with -d)

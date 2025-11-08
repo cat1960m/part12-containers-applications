@@ -1,0 +1,9 @@
+#!/bin/bash 
+docker run -it --rm ubuntu bash -c "
+apt update && apt install nano -y
+mkdir /usr/src/app
+echo "hello" > /usr/src/app/index.js
+nano /usr/src/app/index.js
+
+cat /usr/src/app/index.js
+exit"

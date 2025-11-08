@@ -1,0 +1,31 @@
+--2025-10-29 20:58:02--  http://helsinki.fi/
+Resolving helsinki.fi (helsinki.fi)... 128.214.222.50
+Connecting to helsinki.fi (helsinki.fi)|128.214.222.50|:80... connected.
+HTTP request sent, awaiting response... 301 Moved Permanently
+Location: https://helsinki.fi/ [following]
+--2025-10-29 20:58:02--  https://helsinki.fi/
+Connecting to helsinki.fi (helsinki.fi)|128.214.222.50|:443... connected.
+HTTP request sent, awaiting response... 301 Moved Permanently
+Location: https://www.helsinki.fi/ [following]
+--2025-10-29 20:58:03--  https://www.helsinki.fi/
+Resolving www.helsinki.fi (www.helsinki.fi)... 2001:708:110:d08::65, 128.214.224.101
+Connecting to www.helsinki.fi (www.helsinki.fi)|2001:708:110:d08::65|:443... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: https://www.helsinki.fi/en [following]
+--2025-10-29 20:58:04--  https://www.helsinki.fi/en
+Reusing existing connection to [www.helsinki.fi]:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 385766 (377K) [text/html]
+Saving to: ‘index.html’
+
+     0K .......... .......... .......... .......... .......... 13%  181K 2s
+    50K .......... .......... .......... .......... .......... 26%  367K 1s
+   100K .......... .......... .......... .......... .......... 39% 8,34M 1s
+   150K .......... .......... .......... .......... .......... 53%  371K 0s
+   200K .......... .......... .......... .......... .......... 66% 34,4M 0s
+   250K .......... .......... .......... .......... .......... 79% 9,06M 0s
+   300K .......... .......... .......... .......... .......... 92%  124M 0s
+   350K .......... .......... ......                          100% 70,2M=0,6s
+
+2025-10-29 20:58:04 (673 KB/s) - ‘index.html’ saved [385766/385766]
+

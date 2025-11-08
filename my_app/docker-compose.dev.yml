@@ -1,0 +1,63 @@
+services:
+  mongo:
+    image: mongo
+    container_name: mongo_container
+    ports:
+      - 3456:27017
+    volumes:
+      # make mongo init and save in file 'mongo-init.js' (name can be any) and copy it in folder
+      # /docker-entrypoint-initdb.d/ is a fixed, special directory used by the official MongoDB Docker image.
+      #The name cannot be changed.
+      - ./phonebook_back/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+      # needed to persist data
+      - mongo_data:/data/db
+  back: # The name of the service, can be anything
+    image: image_phonebook-back # Declares which image to use
+    build:
+      context: ./phonebook_back # Declares where to build if image is not found
+      dockerfile: ./dev.Dockerfile
+    #ports: # Declares the ports to publish
+    #  - 3001:3001
+    volumes:
+      - ./phonebook_back:/usr/src/app # The path can be relative, so ./ is enough to say "the same location as the docker-compose.yml"
+
+    environment:
+      - PORT=3001
+      # - MONGO_URL=mongodb://the_username:the_password@localhost:3456/the_database
+      # - MONGO_URL=mongodb://the_username:the_password@mongo:27017/the_database
+      - MONGODB_URI=mongodb+srv://Kat:Lika1987@cluster0.fd4djlf.mongodb.net/phoneBookApp?retryWrites=true&w=majority&appName=Cluster0
+
+    container_name: container-phonebook-back-dev
+    depends_on:
+      - mongo
+  front: # The name of the service, can be anything
+    image: image_phonebook_front_dev # Declares which image to use
+    environment:
+      VITE_BACK_URL: http://localhost:8080/app
+
+    build:
+      context: ./phonebook_front
+      dockerfile: dev.Dockerfile
+    #ports: # Declares the ports to publish
+    #  - 5173:5173
+    volumes:
+      - ./phonebook_front:/usr/src/app # The path can be relative, so ./ is enough to say "the same location as the docker-compose.yml"
+    container_name: container_phonebook_front_dev
+  nginx:
+    image: nginx:1.20.1
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:80
+    container_name: reverse-proxy-dev
+    depends_on:
+      - front # wait for the frontend container to be started
+
+volumes:
+  mongo_data:
+
+  #run:
+  #1) clear:
+  #> docker compose -f docker-compose.dev.yml down --volumes
+  #2) start
+  # >docker compose -f docker-compose.dev.yml up --build

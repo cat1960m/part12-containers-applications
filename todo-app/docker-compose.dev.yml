@@ -1,0 +1,76 @@
+services:
+  front: # The name of the service, can be anything
+    image: image_todo-front_dev # Declares which image to use
+    environment:
+      VITE_BACKEND_URL: http://localhost:8080/api/
+    build:
+      context: ./todo-frontend
+      dockerfile: Dockerfile_dev
+    # ports: # Declares the ports to publish
+    #  - 5173:5173
+    volumes:
+      - ./todo-frontend:/usr/src/app # The path can be relative, so ./ is enough to say "the same location as the docker-compose.yml"
+    container_name: container_todo-front_dev
+  redis:
+    image: redis:3
+    container_name: redis_container
+    ports:
+      - 6379:6379
+    volumes: # Declare the volume
+      - redis_data:/data
+  mongo:
+    image: mongo
+    container_name: mongo_container
+    ports:
+      - 3456:27017
+    environment:
+      # These 2 firs variables, used in conjunction, create a new user and set that user's password. This user is created in the admin authentication database and given the role of root, which is a "superuser" role.
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+      #MONGO_INITDB_DATABASE will tell MongoDB to create a database with that name.
+      MONGO_INITDB_DATABASE: the_database
+    volumes:
+      # make mongo init and save in file 'mongo-init.js' (name can be any) and copy it in folder
+      # /docker-entrypoint-initdb.d/ is a fixed, special directory used by the official MongoDB Docker image.
+      #The name cannot be changed.
+      - ./todo-backend/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+      # needed to persist data
+      - mongo_data:/data/db
+
+  back: # The name of the service, can be anything
+    image: image_todo-back # Declares which image to use
+    build:
+      context: ./todo-backend # Declares where to build if image is not found
+      dockerfile: Dockerfile-dev
+    # ports: # Declares the ports to publish
+    #  - 3000:3000
+    volumes:
+      - ./todo-backend:/usr/src/app # The path can be relative, so ./ is enough to say "the same location as the docker-compose.yml"
+
+    environment:
+      - REDIS_URL=redis://redis:6379
+      # - MONGO_URL=mongodb://the_username:the_password@localhost:3456/the_database
+      - MONGO_URL=mongodb://the_username:the_password@mongo:27017/the_database
+    container_name: container-todo-back
+    depends_on:
+      - mongo
+      - redis
+  nginx:
+    image: nginx:1.20.1
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:80
+    container_name: reverse-proxy
+    depends_on:
+      - front # wait for the frontend container to be started
+volumes:
+  mongo_data:
+  redis_data:
+# docker compose  -f docker-compose.dev.yml up
+# docker compose  -f docker-compose.dev.yml up -- build (to rebuild images)
+# docker compose -f docker-compose.dev.yml up -d (-d for detached)
+# docker compose -f docker-compose.dev.yml down (if started with -d)
+# docker compose  -f docker-compose.dev.yml up --build. # renew image
+

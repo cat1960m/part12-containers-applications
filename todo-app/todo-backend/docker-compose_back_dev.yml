@@ -1,0 +1,19 @@
+services:
+  back: # The name of the service, can be anything
+    image: image_todo-back # Declares which image to use
+    build:
+      context: . # Declares where to build if image is not found
+      dockerfile: ./Dockerfile-dev
+    ports: # Declares the ports to publish
+      - 3000:3000
+    volumes:
+      - ./:/usr/src/app # The path can be relative, so ./ is enough to say "the same location as the docker-compose.yml"
+
+    environment:
+      - REDIS_URL=redis://redis:6379
+      # - MONGO_URL=mongodb://the_username:the_password@localhost:3456/the_database
+      - MONGO_URL=mongodb://the_username:the_password@mongo:27017/the_database
+    container_name: container-todo-back
+# docker compose -f docker-compose_back_dev.yml up
+# docker compose -f docker-compose_back_dev.yml  up -d (-d for detached)
+# docker compose -f docker-compose_back_dev.yml  down (if started with -d)

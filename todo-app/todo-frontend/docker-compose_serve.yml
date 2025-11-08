@@ -1,0 +1,13 @@
+services:
+  app: # The name of the service, can be anything
+    image: todo-front_serve # Declares which image to use
+    build:
+      context: .
+      dockerfile: Dockerfile_serve
+    ports: # Declares the ports to publish
+      - 5012:3000
+    container_name: todo-front_serve
+
+# docker compose  -f docker-compose_serve.yml up
+# docker compose -f docker-compose_serve.yml up -d (-d for detached)
+# docker compose -f docker-compose_serve.yml down (if started with -d)
